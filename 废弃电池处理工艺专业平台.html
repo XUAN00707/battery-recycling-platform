@@ -1,0 +1,2851 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>废弃电池处理工艺专业平台</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #28a745;
+            --accent-color: #ffc107;
+            --danger-color: #dc3545;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --gray-color: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 顶部导航栏 */
+        .top-nav {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 10px 0;
+        }
+        
+        .top-nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .top-nav .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        /* 主容器 */
+        .main-container {
+            display: flex;
+            min-height: calc(100vh - 60px);
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            border-right: 1px solid #e9ecef;
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar:hover {
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .sidebar-menu {
+            padding: 10px 0;
+        }
+        
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .menu-item:hover {
+            background-color: #f8f9fa;
+            border-left-color: var(--primary-color);
+        }
+        
+        .menu-item.active {
+            background-color: #e3f2fd;
+            border-left-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .menu-item i {
+            font-size: 1.2rem;
+        }
+        
+        /* 主内容区 */
+        .content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        /* 页面标题 */
+        .page-title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* 卡片 */
+        .card {
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 20px;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        /* 图表容器 */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+        
+        /* 表格 */
+        .table {
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .table th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+        
+        /* 按钮 */
+        .btn {
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: #0069d9;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border: none;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #218838;
+            transform: translateY(-1px);
+        }
+        
+        /* 表单 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-control {
+            border-radius: var(--border-radius);
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+        }
+        
+        /* 标签 */
+        .badge {
+            font-size: 0.8rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .badge-success {
+            background-color: var(--secondary-color);
+        }
+        
+        .badge-warning {
+            background-color: var(--accent-color);
+        }
+        
+        .badge-danger {
+            background-color: var(--danger-color);
+        }
+        
+        /* 设备卡片 */
+        .equipment-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .equipment-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .equipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .equipment-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* 工艺流程卡片 */
+        .process-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .process-card:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .process-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .process-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .process-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        /* 工艺流程样式 */
+        .process-flow-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .process-step {
+            flex: 0 0 auto;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+        
+        .process-step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .process-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+        }
+        
+        .process-arrow {
+            display: flex;
+            align-items: center;
+            margin: 0 10px;
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        /* 新闻样式 */
+        .news-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .news-item {
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .news-item:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .news-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
+        
+        .news-date {
+            font-size: 14px;
+            color: #999;
+        }
+        
+        .news-summary {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .news-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .news-read {
+            color: #007bff;
+            cursor: pointer;
+        }
+        
+        .news-read:hover {
+            text-decoration: underline;
+        }
+        
+        /* 推文样式 */
+        .tweets-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .tweet-item {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        
+        .tweet-header {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .tweet-avatar {
+            color: #007bff;
+        }
+        
+        .tweet-info {
+            flex: 1;
+        }
+        
+        .tweet-author {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 0 0 2px 0;
+        }
+        
+        .tweet-handle {
+            font-size: 12px;
+            color: #666;
+            margin-right: 10px;
+        }
+        
+        .tweet-time {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .tweet-content {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .tweet-actions {
+            display: flex;
+            gap: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .tweet-action {
+            cursor: pointer;
+        }
+        
+        .tweet-action:hover {
+            color: #007bff;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: 60px;
+                left: -100%;
+                height: calc(100vh - 60px);
+                z-index: 1000;
+                transition: all 0.3s ease;
+            }
+            
+            .sidebar.active {
+                left: 0;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .process-flow-container {
+                flex-direction: column;
+            }
+            
+            .process-arrow {
+                transform: rotate(90deg);
+                margin: 10px 0;
+            }
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 消息提示 */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1000;
+            min-width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="top-nav">
+        <div class="container">
+            <div class="logo">
+                <i class="fa fa-recycle"></i>
+                废弃电池处理工艺专业平台
+            </div>
+            <div class="user-info">
+                <span id="current-date" style="margin-right: 20px;">2026-04-15 12:00:00</span>
+                <span>欢迎，管理员</span>
+                <button class="btn btn-sm btn-outline-light">
+                    <i class="fa fa-user"></i> 个人中心
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fa fa-tachometer"></i> 控制面板
+            </div>
+            <div class="sidebar-menu">
+                <div class="menu-item active" data-target="dashboard">
+                    <i class="fa fa-dashboard"></i>
+                    <span>数据看板</span>
+                </div>
+                <div class="menu-item" data-target="process">
+                    <i class="fa fa-industry"></i>
+                    <span>工艺流程</span>
+                </div>
+                <div class="menu-item" data-target="equipment">
+                    <i class="fa fa-cogs"></i>
+                    <span>设备管理</span>
+                </div>
+                <div class="menu-item" data-target="carbon">
+                    <i class="fa fa-leaf"></i>
+                    <span>碳排放核算</span>
+                </div>
+                <div class="menu-item" data-target="reports">
+                    <i class="fa fa-file-text-o"></i>
+                    <span>报表生成</span>
+                </div>
+                <div class="menu-item" data-target="enterprise">
+                    <i class="fa fa-building"></i>
+                    <span>企业数据</span>
+                </div>
+                <div class="menu-item" data-target="profile">
+                    <i class="fa fa-user"></i>
+                    <span>个人中心</span>
+                </div>
+                <div class="menu-item" data-target="news">
+                    <i class="fa fa-newspaper-o"></i>
+                    <span>行业动态</span>
+                </div>
+                <div class="menu-item" data-target="settings">
+                    <i class="fa fa-cog"></i>
+                    <span>系统设置</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主内容区 -->
+        <div class="content">
+            <!-- 数据看板 -->
+            <div id="dashboard" class="page">
+                <h1 class="page-title">
+                    <i class="fa fa-dashboard"></i>
+                    数据看板
+                </h1>
+                
+                <!-- 统计卡片 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa fa-recycle"></i>
+                        </div>
+                        <div class="stat-value">98.5%</div>
+                        <div class="stat-label">回收率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa fa-battery-three-quarters"></i>
+                        </div>
+                        <div class="stat-value">5,236</div>
+                        <div class="stat-label">处理电池数量</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <div class="stat-value">96.2%</div>
+                        <div class="stat-label">达标排放率</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fa fa-industry"></i>
+                        </div>
+                        <div class="stat-value">1,245</div>
+                        <div class="stat-label">再生材料产量 (吨)</div>
+                    </div>
+                </div>
+                
+                <!-- 图表 -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa fa-line-chart"></i>
+                                处理量趋势
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="processingChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa fa-pie-chart"></i>
+                                回收材料分布
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="materialChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa fa-bar-chart"></i>
+                                能耗分析
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="energyChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <i class="fa fa-cloud"></i>
+                                排放指标
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="emissionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 工艺流程 -->
+            <div id="process" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-industry"></i>
+                    工艺流程
+                </h1>
+                
+                <!-- 工艺流程图 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-sitemap"></i>
+                        工艺流程图
+                    </div>
+                    <div class="card-body">
+                        <!-- 图片版本工艺流程图 -->
+                        <div class="text-center mb-6">
+                            <div class="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-xl shadow-lg" style="max-width: 1000px; margin: 0 auto;">
+                                <h4 class="mb-6 text-primary font-bold text-2xl">废弃电池处理工艺流程</h4>
+                                <div class="process-flow-container">
+                                    <!-- 流程步骤 -->
+                                    <div class="process-step active">
+                                        <div class="process-icon bg-primary text-white rounded-full w-16 h-16 flex items-center justify-content-center mx-auto mb-3">
+                                            <i class="fa fa-trash-o fa-2x"></i>
+                                        </div>
+                                        <h5 class="text-primary font-semibold">收集</h5>
+                                        <p class="text-sm text-gray-600 mt-2">定点收集、上门回收、回收站回收</p>
+                                    </div>
+                                    <div class="process-arrow">
+                                        <i class="fa fa-arrow-right fa-2x text-primary animate-pulse"></i>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="process-icon bg-success text-white rounded-full w-16 h-16 flex items-center justify-content-center mx-auto mb-3">
+                                            <i class="fa fa-archive fa-2x"></i>
+                                        </div>
+                                        <h5 class="text-success font-semibold">分类</h5>
+                                        <p class="text-sm text-gray-600 mt-2">按电池类型分类贮存</p>
+                                    </div>
+                                    <div class="process-arrow">
+                                        <i class="fa fa-arrow-right fa-2x text-primary animate-pulse"></i>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="process-icon bg-warning text-white rounded-full w-16 h-16 flex items-center justify-content-center mx-auto mb-3">
+                                            <i class="fa fa-cogs fa-2x"></i>
+                                        </div>
+                                        <h5 class="text-warning font-semibold">预处理</h5>
+                                        <p class="text-sm text-gray-600 mt-2">拆解、焙烧、破碎分选</p>
+                                    </div>
+                                    <div class="process-arrow">
+                                        <i class="fa fa-arrow-right fa-2x text-primary animate-pulse"></i>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="process-icon bg-danger text-white rounded-full w-16 h-16 flex items-center justify-content-center mx-auto mb-3">
+                                            <i class="fa fa-refresh fa-2x"></i>
+                                        </div>
+                                        <h5 class="text-danger font-semibold">回收</h5>
+                                        <p class="text-sm text-gray-600 mt-2">湿法回收、火法回收</p>
+                                    </div>
+                                    <div class="process-arrow">
+                                        <i class="fa fa-arrow-right fa-2x text-primary animate-pulse"></i>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="process-icon bg-secondary text-white rounded-full w-16 h-16 flex items-center justify-content-center mx-auto mb-3">
+                                            <i class="fa fa-magic fa-2x"></i>
+                                        </div>
+                                        <h5 class="text-secondary font-semibold">再生</h5>
+                                        <p class="text-sm text-gray-600 mt-2">化学合成、干燥处理、高温烧结</p>
+                                    </div>
+                                    <div class="process-arrow">
+                                        <i class="fa fa-arrow-right fa-2x text-primary animate-pulse"></i>
+                                    </div>
+                                    <div class="process-step">
+                                        <div class="process-icon bg-info text-white rounded-full w-16 h-16 flex items-center justify-content-center mx-auto mb-3">
+                                            <i class="fa fa-lightbulb-o fa-2x"></i>
+                                        </div>
+                                        <h5 class="text-info font-semibold">应用</h5>
+                                        <p class="text-sm text-gray-600 mt-2">动力电池、消费电子电池、储能电池</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 交互式流程图 -->
+                        <div class="mermaid">
+                            flowchart TD
+                                A[废弃电池收集] --> B[分类贮存]
+                                B --> C[预处理阶段]
+                                C --> D[拆解]
+                                D --> E[焙烧]
+                                E --> F[破碎分选]
+                                F --> G[电极材料粉]
+                                G --> H[湿法回收阶段]
+                                G --> I[火法回收阶段]
+                                H --> J[金属盐溶液]
+                                I --> K[金属单质]
+                                J --> L[再生合成阶段]
+                                K --> L
+                                L --> M[再生材料]
+                                L --> N[电极材料粉]
+                                M --> O[产品应用]
+                                N --> O
+                                C --> P[安全处置]
+                                
+                                style A fill:#e3f2fd,stroke:#007bff,stroke-width:2px
+                                style B fill:#e8f5e8,stroke:#28a745,stroke-width:2px
+                                style C fill:#fff3cd,stroke:#ffc107,stroke-width:2px
+                                style H fill:#f8d7da,stroke:#dc3545,stroke-width:2px
+                                style I fill:#f8d7da,stroke:#dc3545,stroke-width:2px
+                                style L fill:#e2e3e5,stroke:#6c757d,stroke-width:2px
+                                style O fill:#d1ecf1,stroke:#17a2b8,stroke-width:2px
+                                style P fill:#f5f5f5,stroke:#343a40,stroke-width:2px
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 工艺步骤 -->
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="process-card">
+                            <div class="process-header">
+                                <div class="process-icon">
+                                    <i class="fa fa-trash-o"></i>
+                                </div>
+                                <div class="process-title">废弃电池收集</div>
+                            </div>
+                            <p>通过定点收集、上门回收和回收站回收等方式，收集废弃电池。</p>
+                            <ul>
+                                <li>设置专用收集箱</li>
+                                <li>定期宣传和引导</li>
+                                <li>建立回收台账</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="process-card">
+                            <div class="process-header">
+                                <div class="process-icon">
+                                    <i class="fa fa-archive"></i>
+                                </div>
+                                <div class="process-title">分类贮存</div>
+                            </div>
+                            <p>按照电池类型进行分类贮存，防止泄漏和安全风险。</p>
+                            <ul>
+                                <li>禁止露天堆放</li>
+                                <li>通风、干燥、防火</li>
+                                <li>设置警示标志</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="process-card">
+                            <div class="process-header">
+                                <div class="process-icon">
+                                    <i class="fa fa-cogs"></i>
+                                </div>
+                                <div class="process-title">预处理阶段</div>
+                            </div>
+                            <p>包括拆解、焙烧和破碎分选等步骤。</p>
+                            <ul>
+                                <li>拆除塑料连接件</li>
+                                <li>400-600℃焙烧</li>
+                                <li>破碎分选电极材料</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="process-card">
+                            <div class="process-header">
+                                <div class="process-icon">
+                                    <i class="fa fa-refresh"></i>
+                                </div>
+                                <div class="process-title">回收阶段</div>
+                            </div>
+                            <p>采用湿法和火法回收工艺。</p>
+                            <ul>
+                                <li>湿法：酸浸、萃取、沉淀</li>
+                                <li>火法：高温熔炼</li>
+                                <li>回收金属和材料</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="process-card">
+                            <div class="process-header">
+                                <div class="process-icon">
+                                    <i class="fa fa-magic"></i>
+                                </div>
+                                <div class="process-title">再生合成</div>
+                            </div>
+                            <p>将回收的材料转化为再生材料。</p>
+                            <ul>
+                                <li>化学合成</li>
+                                <li>干燥处理</li>
+                                <li>高温烧结</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="process-card">
+                            <div class="process-header">
+                                <div class="process-icon">
+                                    <i class="fa fa-lightbulb-o"></i>
+                                </div>
+                                <div class="process-title">产品应用</div>
+                            </div>
+                            <p>再生材料用于生产新的电池或其他产品。</p>
+                            <ul>
+                                <li>动力电池</li>
+                                <li>消费电子电池</li>
+                                <li>储能电池</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设备管理 -->
+            <div id="equipment" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-cogs"></i>
+                    设备管理
+                </h1>
+                
+                <!-- 设备列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-list"></i>
+                        设备列表
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>设备名称</th>
+                                    <th>型号</th>
+                                    <th>数量</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>电池拆解机</td>
+                                    <td>CDJ-1000</td>
+                                    <td>3</td>
+                                    <td><span class="badge badge-success">运行中</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="showEquipmentDetails('CDJ-1000')">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>焙烧炉</td>
+                                    <td>BR-600</td>
+                                    <td>2</td>
+                                    <td><span class="badge badge-success">运行中</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="showEquipmentDetails('BR-600')">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>破碎机</td>
+                                    <td>PSJ-500</td>
+                                    <td>4</td>
+                                    <td><span class="badge badge-success">运行中</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="showEquipmentDetails('PSJ-500')">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>反应釜</td>
+                                    <td>FY-1000</td>
+                                    <td>5</td>
+                                    <td><span class="badge badge-warning">维护中</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="showEquipmentDetails('FY-1000')">详情</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>合成反应器</td>
+                                    <td>HX-800</td>
+                                    <td>3</td>
+                                    <td><span class="badge badge-success">运行中</span></td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="showEquipmentDetails('HX-800')">详情</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 设备详情 -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="equipment-card">
+                            <div class="equipment-header">
+                                <div class="equipment-title">电池拆解机 (CDJ-1000)</div>
+                                <span class="badge badge-success">运行中</span>
+                            </div>
+                            <div class="text-center mb-3">
+                                <div class="bg-white border rounded-lg shadow p-4" style="max-width: 300px; margin: 0 auto; transition: transform 0.3s ease;">
+                                    <div class="bg-primary text-white rounded-full w-56 h-56 flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fa fa-cogs fa-3x"></i>
+                                    </div>
+                                    <h5 class="text-primary">电池拆解机</h5>
+                                    <p class="text-gray-600">CDJ-1000</p>
+                                    <div class="mt-2">
+                                        <span class="badge badge-success">运行中</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p><strong>规格：</strong>处理能力 1000个/小时</p>
+                            <p><strong>功率：</strong>15kW</p>
+                            <p><strong>制造商：</strong>江苏环保设备有限公司</p>
+                            <p><strong>购买日期：</strong>2025-03-15</p>
+                            <p><strong>维护周期：</strong>每3个月</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="equipment-card">
+                            <div class="equipment-header">
+                                <div class="equipment-title">焙烧炉 (BR-600)</div>
+                                <span class="badge badge-success">运行中</span>
+                            </div>
+                            <div class="text-center mb-3">
+                                <div class="bg-white border rounded-lg shadow p-4" style="max-width: 300px; margin: 0 auto; transition: transform 0.3s ease;">
+                                    <div class="bg-danger text-white rounded-full w-56 h-56 flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fa fa-fire fa-3x"></i>
+                                    </div>
+                                    <h5 class="text-danger">焙烧炉</h5>
+                                    <p class="text-gray-600">BR-600</p>
+                                    <div class="mt-2">
+                                        <span class="badge badge-success">运行中</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p><strong>规格：</strong>温度范围 400-600℃</p>
+                            <p><strong>功率：</strong>50kW</p>
+                            <p><strong>制造商：</strong>上海热能设备有限公司</p>
+                            <p><strong>购买日期：</strong>2025-02-10</p>
+                            <p><strong>维护周期：</strong>每6个月</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <div class="equipment-card">
+                            <div class="equipment-header">
+                                <div class="equipment-title">破碎机 (PSJ-500)</div>
+                                <span class="badge badge-success">运行中</span>
+                            </div>
+                            <div class="text-center mb-3">
+                                <div class="bg-white border rounded-lg shadow p-4" style="max-width: 300px; margin: 0 auto; transition: transform 0.3s ease;">
+                                    <div class="bg-secondary text-white rounded-full w-56 h-56 flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fa fa-cube fa-3x"></i>
+                                    </div>
+                                    <h5 class="text-secondary">破碎机</h5>
+                                    <p class="text-gray-600">PSJ-500</p>
+                                    <div class="mt-2">
+                                        <span class="badge badge-success">运行中</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p><strong>规格：</strong>处理能力 5吨/小时</p>
+                            <p><strong>功率：</strong>30kW</p>
+                            <p><strong>制造商：</strong>山东矿山机械有限公司</p>
+                            <p><strong>购买日期：</strong>2025-01-20</p>
+                            <p><strong>维护周期：</strong>每4个月</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="equipment-card">
+                            <div class="equipment-header">
+                                <div class="equipment-title">反应釜 (FY-1000)</div>
+                                <span class="badge badge-warning">维护中</span>
+                            </div>
+                            <div class="text-center mb-3">
+                                <div class="bg-white border rounded-lg shadow p-4" style="max-width: 300px; margin: 0 auto; transition: transform 0.3s ease;">
+                                    <div class="bg-info text-white rounded-full w-56 h-56 flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fa fa-flask fa-3x"></i>
+                                    </div>
+                                    <h5 class="text-info">反应釜</h5>
+                                    <p class="text-gray-600">FY-1000</p>
+                                    <div class="mt-2">
+                                        <span class="badge badge-warning">维护中</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p><strong>规格：</strong>容积 1000L</p>
+                            <p><strong>功率：</strong>20kW</p>
+                            <p><strong>制造商：</strong>江苏化工设备有限公司</p>
+                            <p><strong>购买日期：</strong>2024-12-15</p>
+                            <p><strong>维护周期：</strong>每6个月</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 碳排放核算 -->
+            <div id="carbon" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-leaf"></i>
+                    碳排放核算
+                </h1>
+                
+                <!-- 碳排放计算工具 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-calculator"></i>
+                        碳排放计算工具
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="batteryType">电池类型</label>
+                                    <select class="form-control" id="batteryType">
+                                        <option value="lithium">锂离子电池</option>
+                                        <option value="lead">铅酸电池</option>
+                                        <option value="nickel">镍氢电池</option>
+                                        <option value="zinc">锌锰电池</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="batteryWeight">电池重量 (kg)</label>
+                                    <input type="number" class="form-control" id="batteryWeight" placeholder="请输入电池重量">
+                                </div>
+                                <div class="form-group">
+                                    <label for="processType">处理工艺</label>
+                                    <select class="form-control" id="processType">
+                                        <option value="wet">湿法回收</option>
+                                        <option value="fire">火法回收</option>
+                                        <option value="cascade">梯次利用</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary" onclick="calculateCarbon()">计算碳排放</button>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        计算结果
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="form-group">
+                                            <label>直接碳排放</label>
+                                            <div class="form-control" id="directCarbon">0 kg CO₂e</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>间接碳排放</label>
+                                            <div class="form-control" id="indirectCarbon">0 kg CO₂e</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>总碳排放</label>
+                                            <div class="form-control" id="totalCarbon">0 kg CO₂e</div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>减排量</label>
+                                            <div class="form-control" id="reductionCarbon">0 kg CO₂e</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 自定义排放数据输入 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-pencil"></i>
+                        自定义排放数据
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="customCO2">CO₂排放量 (kg)</label>
+                                    <input type="number" class="form-control" id="customCO2" placeholder="请输入CO₂排放量">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customSO2">SO₂排放量 (kg)</label>
+                                    <input type="number" class="form-control" id="customSO2" placeholder="请输入SO₂排放量">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customNOx">NOx排放量 (kg)</label>
+                                    <input type="number" class="form-control" id="customNOx" placeholder="请输入NOx排放量">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="customPM">颗粒物排放量 (kg)</label>
+                                    <input type="number" class="form-control" id="customPM" placeholder="请输入颗粒物排放量">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customWastewater">废水量 (m³)</label>
+                                    <input type="number" class="form-control" id="customWastewater" placeholder="请输入废水量">
+                                </div>
+                                <div class="form-group">
+                                    <label for="customBatteryType">电池类型</label>
+                                    <select class="form-control" id="customBatteryType">
+                                        <option value="lithium">锂离子电池</option>
+                                        <option value="lead">铅酸电池</option>
+                                        <option value="nickel">镍氢电池</option>
+                                        <option value="zinc">锌锰电池</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button class="btn btn-primary" onclick="saveCustomEmissionData()">保存排放数据</button>
+                            <button class="btn btn-secondary ml-2" onclick="resetCustomEmissionData()">重置</button>
+                            <button class="btn btn-success ml-2" onclick="generateEmissionReport()">生成报告</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 碳排放数据 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-bar-chart"></i>
+                        碳排放数据
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <canvas id="carbonEmissionChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <canvas id="carbonReductionChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 报表生成 -->
+            <div id="reports" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-file-text-o"></i>
+                    报表生成
+                </h1>
+                
+                <!-- 报表生成工具 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-plus"></i>
+                        生成新报表
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="reportType">报表类型</label>
+                            <select class="form-control" id="reportType">
+                                <option value="process">工艺分析报表</option>
+                                <option value="carbon">碳排放报表</option>
+                                <option value="equipment">设备运行报表</option>
+                                <option value="production">生产报表</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportPeriod">报表周期</label>
+                            <select class="form-control" id="reportPeriod">
+                                <option value="daily">日报</option>
+                                <option value="weekly">周报</option>
+                                <option value="monthly">月报</option>
+                                <option value="quarterly">季报</option>
+                                <option value="yearly">年报</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="reportDate">报表日期</label>
+                            <input type="date" class="form-control" id="reportDate">
+                        </div>
+                        <div class="form-group">
+                            <label for="reportFormat">报表格式</label>
+                            <select class="form-control" id="reportFormat">
+                                <option value="pdf">PDF</option>
+                                <option value="excel">Excel</option>
+                                <option value="word">Word</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="generateReport()">生成报表</button>
+                        <button class="btn btn-success ml-2" onclick="saveReportToDesktop()">保存到桌面</button>
+                    </div>
+                </div>
+                
+                <!-- 历史报表 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-history"></i>
+                        历史报表
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>报表名称</th>
+                                    <th>类型</th>
+                                    <th>生成日期</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2026年3月工艺分析报表</td>
+                                    <td>工艺分析</td>
+                                    <td>2026-03-31</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="viewReport('工艺分析报表', '2026-03-31')">查看</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="downloadReport('工艺分析报表', '2026-03-31', 'pdf')">下载</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2026年第一季度碳排放报表</td>
+                                    <td>碳排放</td>
+                                    <td>2026-03-31</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="viewReport('碳排放报表', '2026-03-31')">查看</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="downloadReport('碳排放报表', '2026-03-31', 'excel')">下载</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2026年3月设备运行报表</td>
+                                    <td>设备运行</td>
+                                    <td>2026-03-31</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary" onclick="viewReport('设备运行报表', '2026-03-31')">查看</button>
+                                        <button class="btn btn-sm btn-secondary" onclick="downloadReport('设备运行报表', '2026-03-31', 'word')">下载</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 企业数据 -->
+            <div id="enterprise" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-building"></i>
+                    企业数据
+                </h1>
+                
+                <!-- 企业概况 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-info-circle"></i>
+                        企业概况
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>企业名称：</strong>绿色循环科技有限公司</p>
+                                <p><strong>成立时间：</strong>2023年5月</p>
+                                <p><strong>注册资本：</strong>5000万元</p>
+                                <p><strong>员工人数：</strong>120人</p>
+                                <p><strong>年处理能力：</strong>20000吨</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>主营业务：</strong>废弃电池回收、处理和再生利用</p>
+                                <p><strong>技术专利：</strong>15项</p>
+                                <p><strong>认证资质：</strong>ISO9001、ISO14001、OHSAS18001</p>
+                                <p><strong>合作客户：</strong>200+</p>
+                                <p><strong>年营业额：</strong>8000万元</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 生产数据 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-line-chart"></i>
+                        生产数据
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="productionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 客户数据 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-users"></i>
+                        客户数据
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>客户名称</th>
+                                    <th>合作类型</th>
+                                    <th>年处理量 (吨)</th>
+                                    <th>合作时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>新能源汽车有限公司</td>
+                                    <td>长期合作</td>
+                                    <td>5000</td>
+                                    <td>2023-06</td>
+                                </tr>
+                                <tr>
+                                    <td>电子产品制造有限公司</td>
+                                    <td>长期合作</td>
+                                    <td>3000</td>
+                                    <td>2023-08</td>
+                                </tr>
+                                <tr>
+                                    <td>电池生产企业</td>
+                                    <td>长期合作</td>
+                                    <td>4000</td>
+                                    <td>2023-09</td>
+                                </tr>
+                                <tr>
+                                    <td>废旧物资回收公司</td>
+                                    <td>短期合作</td>
+                                    <td>1500</td>
+                                    <td>2024-01</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人中心 -->
+            <div id="profile" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-user"></i>
+                    个人中心
+                </h1>
+                
+                <!-- 用户信息 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-info-circle"></i>
+                        用户信息
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="text-center">
+                                    <div class="bg-primary text-white rounded-full w-32 h-32 flex align-items-center justify-content-center mx-auto mb-3">
+                                        <i class="fa fa-user fa-4x"></i>
+                                    </div>
+                                    <h4>管理员</h4>
+                                    <p class="text-gray-600">系统管理员</p>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <label for="profile-username">用户名</label>
+                                    <input type="text" class="form-control" id="profile-username" value="admin">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-email">邮箱</label>
+                                    <input type="email" class="form-control" id="profile-email" value="admin@example.com">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-name">姓名</label>
+                                    <input type="text" class="form-control" id="profile-name" value="管理员">
+                                </div>
+                                <div class="form-group">
+                                    <label for="profile-phone">电话</label>
+                                    <input type="tel" class="form-control" id="profile-phone" value="13800138000">
+                                </div>
+                                <button class="btn btn-primary" onclick="saveProfile()">保存个人信息</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 密码修改 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-lock"></i>
+                        密码修改
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="old-password">旧密码</label>
+                            <input type="password" class="form-control" id="old-password" placeholder="请输入旧密码">
+                        </div>
+                        <div class="form-group">
+                            <label for="new-password">新密码</label>
+                            <input type="password" class="form-control" id="new-password" placeholder="请输入新密码">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm-password">确认新密码</label>
+                            <input type="password" class="form-control" id="confirm-password" placeholder="请确认新密码">
+                        </div>
+                        <button class="btn btn-primary" onclick="changePassword()">修改密码</button>
+                    </div>
+                </div>
+                
+                <!-- 操作记录 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-history"></i>
+                        操作记录
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>操作时间</th>
+                                    <th>操作类型</th>
+                                    <th>操作内容</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2026-04-14 15:30:22</td>
+                                    <td>系统登录</td>
+                                    <td>管理员登录系统</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-04-14 14:25:10</td>
+                                    <td>报表生成</td>
+                                    <td>生成2026年3月工艺分析报表</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-04-14 13:10:45</td>
+                                    <td>碳排放计算</td>
+                                    <td>计算锂离子电池碳排放</td>
+                                </tr>
+                                <tr>
+                                    <td>2026-04-14 10:05:33</td>
+                                    <td>设备管理</td>
+                                    <td>查看电池拆解机详情</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 行业动态 -->
+            <div id="news" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-newspaper-o"></i>
+                    行业动态
+                </h1>
+                
+                <!-- 最新动态 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-bullhorn"></i>
+                        最新动态
+                    </div>
+                    <div class="card-body">
+                        <div class="news-container">
+                            <!-- 新闻项 -->
+                            <div class="news-item" onclick="openNewsDetail(1)">
+                                <div class="news-header">
+                                    <h5 class="news-title">工信部发布《新能源汽车废旧动力电池回收利用管理暂行办法》</h5>
+                                    <span class="news-date">2026-04-10</span>
+                                </div>
+                                <p class="news-summary">工信部近日发布《新能源汽车废旧动力电池回收利用管理暂行办法》，明确了回收责任、处理标准和监管要求，促进废旧动力电池的规范回收和利用。</p>
+                                <div class="news-footer">
+                                    <span class="news-source">来源：工信部官网</span>
+                                    <span class="news-read">阅读更多 <i class="fa fa-angle-right"></i></span>
+                                </div>
+                            </div>
+                            
+                            <div class="news-item" onclick="openNewsDetail(2)">
+                                <div class="news-header">
+                                    <h5 class="news-title">2026年全国废弃电池回收量预计突破40万吨</h5>
+                                    <span class="news-date">2026-04-08</span>
+                                </div>
+                                <p class="news-summary">据中国电子节能技术协会预测，2026年全国废弃电池回收量将突破40万吨，同比增长25%，行业发展前景广阔。</p>
+                                <div class="news-footer">
+                                    <span class="news-source">来源：中国电子节能技术协会</span>
+                                    <span class="news-read">阅读更多 <i class="fa fa-angle-right"></i></span>
+                                </div>
+                            </div>
+                            
+                            <div class="news-item" onclick="openNewsDetail(3)">
+                                <div class="news-header">
+                                    <h5 class="news-title">国内首条全自动化废旧电池回收生产线建成投产</h5>
+                                    <span class="news-date">2026-04-05</span>
+                                </div>
+                                <p class="news-summary">国内首条全自动化废旧电池回收生产线在江苏建成投产，年处理能力达5万吨，回收效率提高30%以上。</p>
+                                <div class="news-footer">
+                                    <span class="news-source">来源：科技日报</span>
+                                    <span class="news-read">阅读更多 <i class="fa fa-angle-right"></i></span>
+                                </div>
+                            </div>
+                            
+                            <div class="news-item" onclick="openNewsDetail(4)">
+                                <div class="news-header">
+                                    <h5 class="news-title">全球电池回收市场规模预计2030年达到2000亿美元</h5>
+                                    <span class="news-date">2026-04-01</span>
+                                </div>
+                                <p class="news-summary">根据全球环保研究网发布的报告，全球电池回收市场规模预计2030年达到2000亿美元，年复合增长率超过20%。</p>
+                                <div class="news-footer">
+                                    <span class="news-source">来源：全球环保研究网</span>
+                                    <span class="news-read">阅读更多 <i class="fa fa-angle-right"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 行业推文 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-twitter"></i>
+                        行业推文
+                    </div>
+                    <div class="card-body">
+                        <div class="tweets-container">
+                            <!-- 推文项 -->
+                            <div class="tweet-item">
+                                <div class="tweet-header">
+                                    <div class="tweet-avatar">
+                                        <i class="fa fa-user-circle fa-2x"></i>
+                                    </div>
+                                    <div class="tweet-info">
+                                        <h6 class="tweet-author">电池回收协会</h6>
+                                        <span class="tweet-handle">@battery_recycle</span>
+                                        <span class="tweet-time">2小时前</span>
+                                    </div>
+                                </div>
+                                <p class="tweet-content">【重要通知】2026年全国电池回收行业大会将于5月在上海召开，欢迎行业同仁参加！ #电池回收 #绿色环保</p>
+                                <div class="tweet-actions">
+                                    <span class="tweet-action"><i class="fa fa-comment"></i> 12</span>
+                                    <span class="tweet-action"><i class="fa fa-retweet"></i> 8</span>
+                                    <span class="tweet-action"><i class="fa fa-heart"></i> 24</span>
+                                </div>
+                            </div>
+                            
+                            <div class="tweet-item">
+                                <div class="tweet-header">
+                                    <div class="tweet-avatar">
+                                        <i class="fa fa-user-circle fa-2x"></i>
+                                    </div>
+                                    <div class="tweet-info">
+                                        <h6 class="tweet-author">新能源汽车联盟</h6>
+                                        <span class="tweet-handle">@new_energy_car</span>
+                                        <span class="tweet-time">5小时前</span>
+                                    </div>
+                                </div>
+                                <p class="tweet-content">研究表明，废旧动力电池回收再利用可减少80%的碳排放，为碳中和目标做出重要贡献。 #新能源 #碳中和</p>
+                                <div class="tweet-actions">
+                                    <span class="tweet-action"><i class="fa fa-comment"></i> 18</span>
+                                    <span class="tweet-action"><i class="fa fa-retweet"></i> 15</span>
+                                    <span class="tweet-action"><i class="fa fa-heart"></i> 36</span>
+                                </div>
+                            </div>
+                            
+                            <div class="tweet-item">
+                                <div class="tweet-header">
+                                    <div class="tweet-avatar">
+                                        <i class="fa fa-user-circle fa-2x"></i>
+                                    </div>
+                                    <div class="tweet-info">
+                                        <h6 class="tweet-author">环保科技报</h6>
+                                        <span class="tweet-handle">@green_tech_news</span>
+                                        <span class="tweet-time">1天前</span>
+                                    </div>
+                                </div>
+                                <p class="tweet-content">最新技术突破：新型废旧电池回收工艺可将回收率提高至95%以上，大幅减少资源浪费。 #环保科技 #技术创新</p>
+                                <div class="tweet-actions">
+                                    <span class="tweet-action"><i class="fa fa-comment"></i> 25</span>
+                                    <span class="tweet-action"><i class="fa fa-retweet"></i> 20</span>
+                                    <span class="tweet-action"><i class="fa fa-heart"></i> 48</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 系统设置 -->
+            <div id="settings" class="page d-none">
+                <h1 class="page-title">
+                    <i class="fa fa-cog"></i>
+                    系统设置
+                </h1>
+                
+                <!-- 用户设置 -->
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-user"></i>
+                        用户设置
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="username">用户名</label>
+                            <input type="text" class="form-control" id="username" value="admin">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" class="form-control" id="email" value="admin@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">密码</label>
+                            <input type="password" class="form-control" id="password" placeholder="输入新密码">
+                        </div>
+                        <button class="btn btn-primary">保存设置</button>
+                    </div>
+                </div>
+                
+                <!-- 系统配置 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-cogs"></i>
+                        系统配置
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>语言</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="language" id="language-zh" checked>
+                                <label class="form-check-label" for="language-zh">中文</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="language" id="language-en">
+                                <label class="form-check-label" for="language-en">English</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="theme">主题</label>
+                            <select class="form-control" id="theme">
+                                <option value="light">浅色主题</option>
+                                <option value="dark">深色主题</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveSystemConfig()">保存配置</button>
+                    </div>
+                </div>
+                
+                <!-- 通知管理 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-bell"></i>
+                        通知管理
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="notification-email">邮件通知</label>
+                            <select class="form-control" id="notification-email">
+                                <option value="enabled">启用</option>
+                                <option value="disabled">禁用</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notification-sms">短信通知</label>
+                            <select class="form-control" id="notification-sms">
+                                <option value="enabled">启用</option>
+                                <option value="disabled">禁用</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="notification-system">系统通知</label>
+                            <select class="form-control" id="notification-system">
+                                <option value="enabled">启用</option>
+                                <option value="disabled">禁用</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="saveNotificationSettings()">保存通知设置</button>
+                    </div>
+                </div>
+                
+                <!-- 数据备份与恢复 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-database"></i>
+                        数据备份与恢复
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>备份频率</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="backup-frequency" id="backup-daily" checked>
+                                <label class="form-check-label" for="backup-daily">每日</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="backup-frequency" id="backup-weekly">
+                                <label class="form-check-label" for="backup-weekly">每周</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="backup-frequency" id="backup-monthly">
+                                <label class="form-check-label" for="backup-monthly">每月</label>
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="backupData()">立即备份</button>
+                        <button class="btn btn-secondary ml-2" onclick="restoreData()">恢复数据</button>
+                    </div>
+                </div>
+                
+                <!-- 系统日志 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-file-text-o"></i>
+                        系统日志
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="log-level">日志级别</label>
+                            <select class="form-control" id="log-level">
+                                <option value="debug">调试</option>
+                                <option value="info">信息</option>
+                                <option value="warn">警告</option>
+                                <option value="error">错误</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="viewLogs()">查看日志</button>
+                        <button class="btn btn-secondary ml-2" onclick="clearLogs()">清空日志</button>
+                    </div>
+                </div>
+                
+                <!-- 系统信息 -->
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <i class="fa fa-info-circle"></i>
+                        系统信息
+                    </div>
+                    <div class="card-body">
+                        <p><strong>系统版本：</strong>v2.0.0</p>
+                        <p><strong>最后更新：</strong>2026-04-14</p>
+                        <p><strong>服务器状态：</strong>运行中</p>
+                        <p><strong>数据库状态：</strong>正常</p>
+                        <p><strong>存储空间：</strong>128GB / 500GB</p>
+                        <p><strong>在线用户：</strong>3</p>
+                        <button class="btn btn-secondary" onclick="checkUpdate()">检查更新</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 侧边栏导航
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // 移除所有菜单项的active类
+                document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+                // 添加active类到当前点击的项
+                this.classList.add('active');
+                
+                // 隐藏所有页面
+                document.querySelectorAll('.page').forEach(page => {
+                    page.classList.add('d-none');
+                });
+                
+                // 显示目标页面
+                const target = this.getAttribute('data-target');
+                document.getElementById(target).classList.remove('d-none');
+            });
+        });
+
+        // 碳排放计算函数
+        function calculateCarbon() {
+            const batteryType = document.getElementById('batteryType').value;
+            const batteryWeight = parseFloat(document.getElementById('batteryWeight').value);
+            const processType = document.getElementById('processType').value;
+            
+            if (isNaN(batteryWeight)) {
+                alert('请输入电池重量');
+                return;
+            }
+            
+            // 碳排放系数（kg CO₂e/kg）
+            const emissionFactors = {
+                lithium: {
+                    wet: { direct: 0.5, indirect: 0.8 },
+                    fire: { direct: 1.2, indirect: 0.6 },
+                    cascade: { direct: 0.2, indirect: 0.3 }
+                },
+                lead: {
+                    wet: { direct: 0.8, indirect: 0.6 },
+                    fire: { direct: 1.5, indirect: 0.4 },
+                    cascade: { direct: 0.3, indirect: 0.2 }
+                },
+                nickel: {
+                    wet: { direct: 0.6, indirect: 0.7 },
+                    fire: { direct: 1.0, indirect: 0.5 },
+                    cascade: { direct: 0.2, indirect: 0.2 }
+                },
+                zinc: {
+                    wet: { direct: 0.4, indirect: 0.5 },
+                    fire: { direct: 0.9, indirect: 0.3 },
+                    cascade: { direct: 0.1, indirect: 0.1 }
+                }
+            };
+            
+            // 减排系数（kg CO₂e/kg）
+            const reductionFactors = {
+                lithium: 4.0,
+                lead: 2.5,
+                nickel: 3.0,
+                zinc: 1.5
+            };
+            
+            const factors = emissionFactors[batteryType][processType];
+            const directCarbon = factors.direct * batteryWeight;
+            const indirectCarbon = factors.indirect * batteryWeight;
+            const totalCarbon = directCarbon + indirectCarbon;
+            const reductionCarbon = reductionFactors[batteryType] * batteryWeight;
+            
+            document.getElementById('directCarbon').textContent = directCarbon.toFixed(2) + ' kg CO₂e';
+            document.getElementById('indirectCarbon').textContent = indirectCarbon.toFixed(2) + ' kg CO₂e';
+            document.getElementById('totalCarbon').textContent = totalCarbon.toFixed(2) + ' kg CO₂e';
+            document.getElementById('reductionCarbon').textContent = reductionCarbon.toFixed(2) + ' kg CO₂e';
+        }
+
+        // 报表生成函数
+        function generateReport() {
+            const reportType = document.getElementById('reportType').value;
+            const reportPeriod = document.getElementById('reportPeriod').value;
+            const reportDate = document.getElementById('reportDate').value;
+            const reportFormat = document.getElementById('reportFormat').value;
+            
+            if (!reportDate) {
+                alert('请选择报表日期');
+                return;
+            }
+            
+            // 模拟报表生成过程
+            alert('报表生成中，请稍候...');
+            
+            setTimeout(() => {
+                alert(`报表已生成！\n类型：${getReportTypeName(reportType)}\n周期：${getReportPeriodName(reportPeriod)}\n日期：${reportDate}\n格式：${getReportFormatName(reportFormat)}\n\n报表已保存到系统中。`);
+            }, 1500);
+        }
+
+        // 设备详情显示函数
+        function showEquipmentDetails(equipmentId) {
+            // 设备详细信息
+            const equipmentDetails = {
+                'CDJ-1000': {
+                    name: '电池拆解机',
+                    model: 'CDJ-1000',
+                    status: '运行中',
+                    spec: '处理能力 1000个/小时',
+                    power: '15kW',
+                    manufacturer: '江苏环保设备有限公司',
+                    purchaseDate: '2025-03-15',
+                    maintenanceCycle: '每3个月',
+                    description: '用于自动拆解电池，分离外壳和内部组件，是废弃电池处理的第一道工序。',
+                    usage: '主要用于处理锂电池、铅酸电池等各类废弃电池的初步拆解。'
+                },
+                'BR-600': {
+                    name: '焙烧炉',
+                    model: 'BR-600',
+                    status: '运行中',
+                    spec: '温度范围 400-600℃',
+                    power: '50kW',
+                    manufacturer: '上海热能设备有限公司',
+                    purchaseDate: '2025-02-10',
+                    maintenanceCycle: '每6个月',
+                    description: '用于去除电池中的电解质和有机溶剂，为后续的破碎分选做准备。',
+                    usage: '主要用于处理拆解后的电池材料，通过高温焙烧去除有机物。'
+                },
+                'PSJ-500': {
+                    name: '破碎机',
+                    model: 'PSJ-500',
+                    status: '运行中',
+                    spec: '处理能力 5吨/小时',
+                    power: '30kW',
+                    manufacturer: '山东矿山机械有限公司',
+                    purchaseDate: '2025-01-20',
+                    maintenanceCycle: '每4个月',
+                    description: '用于破碎电池，分离电极材料粉和其他组件。',
+                    usage: '主要用于处理焙烧后的电池材料，将其破碎成小颗粒以便后续分选。'
+                },
+                'FY-1000': {
+                    name: '反应釜',
+                    model: 'FY-1000',
+                    status: '维护中',
+                    spec: '容积 1000L',
+                    power: '20kW',
+                    manufacturer: '江苏化工设备有限公司',
+                    purchaseDate: '2024-12-15',
+                    maintenanceCycle: '每6个月',
+                    description: '用于湿法回收中的化学反应，提取金属离子。',
+                    usage: '主要用于处理电极材料粉，通过酸浸、萃取等化学反应提取金属。'
+                },
+                'HX-800': {
+                    name: '合成反应器',
+                    model: 'HX-800',
+                    status: '运行中',
+                    spec: '容积 800L',
+                    power: '25kW',
+                    manufacturer: '浙江化工设备有限公司',
+                    purchaseDate: '2025-01-10',
+                    maintenanceCycle: '每6个月',
+                    description: '用于再生材料的化学合成，将金属盐溶液转化为目标化合物。',
+                    usage: '主要用于将回收的金属盐溶液合成再生材料，如正极材料前驱体等。'
+                }
+            };
+            
+            const equipment = equipmentDetails[equipmentId];
+            if (equipment) {
+                // 创建详情对话框
+                const modal = document.createElement('div');
+                modal.className = 'modal fade show';
+                modal.style.display = 'block';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                modal.style.zIndex = '1000';
+                
+                modal.innerHTML = `
+                    <div class="modal-dialog" style="margin: 10% auto; max-width: 600px;">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">${equipment.name} (${equipment.model})</h5>
+                                <button type="button" class="btn-close" onclick="this.closest('.modal').remove()" style="color: white;"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p><strong>状态：</strong><span class="badge ${equipment.status === '运行中' ? 'badge-success' : 'badge-warning'}">${equipment.status}</span></p>
+                                        <p><strong>规格：</strong>${equipment.spec}</p>
+                                        <p><strong>功率：</strong>${equipment.power}</p>
+                                        <p><strong>制造商：</strong>${equipment.manufacturer}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p><strong>购买日期：</strong>${equipment.purchaseDate}</p>
+                                        <p><strong>维护周期：</strong>${equipment.maintenanceCycle}</p>
+                                    </div>
+                                </div>
+                                <hr>
+                                <h6>设备描述</h6>
+                                <p>${equipment.description}</p>
+                                <h6 class="mt-3">使用场景</h6>
+                                <p>${equipment.usage}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }
+        }
+
+        // 保存自定义排放数据
+        function saveCustomEmissionData() {
+            const co2 = document.getElementById('customCO2').value;
+            const so2 = document.getElementById('customSO2').value;
+            const nox = document.getElementById('customNOx').value;
+            const pm = document.getElementById('customPM').value;
+            const wastewater = document.getElementById('customWastewater').value;
+            const batteryType = document.getElementById('customBatteryType').value;
+            
+            if (!co2 || !so2 || !nox || !pm || !wastewater) {
+                alert('请填写所有排放数据');
+                return;
+            }
+            
+            // 保存数据到本地存储
+            const emissionData = {
+                co2: parseFloat(co2),
+                so2: parseFloat(so2),
+                nox: parseFloat(nox),
+                pm: parseFloat(pm),
+                wastewater: parseFloat(wastewater),
+                batteryType: batteryType,
+                timestamp: new Date().toISOString()
+            };
+            
+            // 模拟保存过程
+            alert('排放数据保存成功！\n\nCO₂: ' + co2 + ' kg\nSO₂: ' + so2 + ' kg\nNOx: ' + nox + ' kg\n颗粒物: ' + pm + ' kg\n废水量: ' + wastewater + ' m³\n电池类型: ' + getBatteryTypeName(batteryType));
+        }
+
+        // 重置自定义排放数据
+        function resetCustomEmissionData() {
+            document.getElementById('customCO2').value = '';
+            document.getElementById('customSO2').value = '';
+            document.getElementById('customNOx').value = '';
+            document.getElementById('customPM').value = '';
+            document.getElementById('customWastewater').value = '';
+            document.getElementById('customBatteryType').value = 'lithium';
+        }
+
+        // 获取电池类型名称
+        function getBatteryTypeName(type) {
+            const types = {
+                lithium: '锂离子电池',
+                lead: '铅酸电池',
+                nickel: '镍氢电池',
+                zinc: '锌锰电池'
+            };
+            return types[type] || type;
+        }
+
+        // 查看报表
+        function viewReport(reportName, date) {
+            // 模拟查看报表功能
+            alert(`正在查看 ${reportName} (${date})...\n\n报表内容已加载，正在打开预览窗口。`);
+            
+            // 这里可以添加实际的报表预览功能
+            setTimeout(() => {
+                alert(`${reportName} 预览完成！`);
+            }, 1000);
+        }
+
+        // 下载报表
+        function downloadReport(reportName, date, format) {
+            // 模拟下载报表功能
+            alert(`正在下载 ${reportName} (${date})...\n格式：${format.toUpperCase()}\n\n下载开始，请稍候...`);
+            
+            // 模拟下载进度
+            setTimeout(() => {
+                alert(`${reportName} 下载完成！\n文件已保存到您的下载文件夹。`);
+            }, 1500);
+        }
+
+        // 生成排放报告
+        function generateEmissionReport() {
+            const co2 = parseFloat(document.getElementById('customCO2').value);
+            const so2 = parseFloat(document.getElementById('customSO2').value);
+            const nox = parseFloat(document.getElementById('customNOx').value);
+            const pm = parseFloat(document.getElementById('customPM').value);
+            const wastewater = parseFloat(document.getElementById('customWastewater').value);
+            const batteryType = document.getElementById('customBatteryType').value;
+            
+            if (!co2 || !so2 || !nox || !pm || !wastewater) {
+                alert('请填写所有排放数据');
+                return;
+            }
+            
+            // 创建报告对话框
+            const modal = document.createElement('div');
+            modal.className = 'modal fade show';
+            modal.style.display = 'block';
+            modal.style.position = 'fixed';
+            modal.style.top = '0';
+            modal.style.left = '0';
+            modal.style.width = '100%';
+            modal.style.height = '100%';
+            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            modal.style.zIndex = '1000';
+            
+            modal.innerHTML = `
+                <div class="modal-dialog" style="margin: 5% auto; max-width: 800px; max-height: 90vh; overflow-y: auto;">
+                    <div class="modal-content">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title">排放数据报告</h5>
+                            <button type="button" class="btn-close" onclick="this.closest('.modal').remove()" style="color: white;"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6 class="mb-3">报告信息</h6>
+                            <p><strong>生成日期：</strong>${new Date().toISOString().split('T')[0]}</p>
+                            <p><strong>电池类型：</strong>${getBatteryTypeName(batteryType)}</p>
+                            
+                            <h6 class="mt-4 mb-3">排放数据</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>CO₂排放量：</strong>${co2} kg</p>
+                                    <p><strong>SO₂排放量：</strong>${so2} kg</p>
+                                    <p><strong>NOx排放量：</strong>${nox} kg</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>颗粒物排放量：</strong>${pm} kg</p>
+                                    <p><strong>废水量：</strong>${wastewater} m³</p>
+                                </div>
+                            </div>
+                            
+                            <h6 class="mt-4 mb-3">数据可视化</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">气体排放对比</div>
+                                        <div class="card-body">
+                                            <canvas id="emissionBarChart" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">排放占比</div>
+                                        <div class="card-body">
+                                            <canvas id="emissionPieChart" height="200"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h6 class="mt-4 mb-3">数据分析</h6>
+                            <p>根据输入的排放数据，${getBatteryTypeName(batteryType)}的处理过程中，CO₂排放量为${co2} kg，SO₂排放量为${so2} kg，NOx排放量为${nox} kg，颗粒物排放量为${pm} kg，废水量为${wastewater} m³。</p>
+                            <p>建议采取以下措施减少排放：</p>
+                            <ul>
+                                <li>优化焙烧工艺，减少高温过程中的气体排放</li>
+                                <li>增加废气处理设备，提高气体净化效率</li>
+                                <li>改进湿法回收工艺，减少废水产生</li>
+                                <li>采用清洁能源，降低间接碳排放</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">关闭</button>
+                            <button type="button" class="btn btn-primary" onclick="saveReportToDesktop()">保存到桌面</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // 等待DOM元素加载完成后创建图表
+            setTimeout(() => {
+                // 创建柱状图
+                const barCtx = document.getElementById('emissionBarChart').getContext('2d');
+                new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['CO₂', 'SO₂', 'NOx', '颗粒物'],
+                        datasets: [{
+                            label: '排放量 (kg)',
+                            data: [co2, so2, nox, pm],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+                
+                // 创建饼图
+                const pieCtx = document.getElementById('emissionPieChart').getContext('2d');
+                new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['CO₂', 'SO₂', 'NOx', '颗粒物'],
+                        datasets: [{
+                            data: [co2, so2, nox, pm],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(75, 192, 192, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true
+                    }
+                });
+            }, 100);
+        }
+
+        // 保存报告到桌面
+        function saveReportToDesktop() {
+            // 模拟保存到桌面功能
+            alert('报告正在保存到桌面...\n\n保存完成！报告已保存为 "排放数据报告.html"');
+        }
+
+        // 保存个人信息
+        function saveProfile() {
+            const username = document.getElementById('profile-username').value;
+            const email = document.getElementById('profile-email').value;
+            const name = document.getElementById('profile-name').value;
+            const phone = document.getElementById('profile-phone').value;
+            
+            if (!username || !email || !name || !phone) {
+                alert('请填写所有个人信息');
+                return;
+            }
+            
+            // 模拟保存过程
+            alert('个人信息保存中，请稍候...');
+            
+            setTimeout(() => {
+                alert('个人信息保存成功！');
+            }, 1000);
+        }
+
+        // 修改密码
+        function changePassword() {
+            const oldPassword = document.getElementById('old-password').value;
+            const newPassword = document.getElementById('new-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                alert('请填写所有密码字段');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('新密码和确认密码不一致');
+                return;
+            }
+            
+            if (newPassword.length < 6) {
+                alert('新密码长度不能少于6位');
+                return;
+            }
+            
+            // 模拟密码修改过程
+            alert('密码修改中，请稍候...');
+            
+            setTimeout(() => {
+                alert('密码修改成功！');
+                // 清空密码输入框
+                document.getElementById('old-password').value = '';
+                document.getElementById('new-password').value = '';
+                document.getElementById('confirm-password').value = '';
+            }, 1000);
+        }
+
+        // 保存通知设置
+        function saveNotificationSettings() {
+            const emailNotification = document.getElementById('notification-email').value;
+            const smsNotification = document.getElementById('notification-sms').value;
+            const systemNotification = document.getElementById('notification-system').value;
+            
+            // 模拟保存过程
+            alert('通知设置保存中，请稍候...');
+            
+            setTimeout(() => {
+                alert('通知设置保存成功！');
+            }, 1000);
+        }
+
+        // 备份数据
+        function backupData() {
+            // 模拟备份过程
+            alert('数据备份中，请稍候...');
+            
+            setTimeout(() => {
+                alert('数据备份成功！\n备份文件已保存到指定位置。');
+            }, 2000);
+        }
+
+        // 恢复数据
+        function restoreData() {
+            // 模拟恢复过程
+            alert('数据恢复中，请稍候...');
+            
+            setTimeout(() => {
+                alert('数据恢复成功！\n系统已恢复到备份状态。');
+            }, 2000);
+        }
+
+        // 查看日志
+        function viewLogs() {
+            // 模拟查看日志
+            alert('正在加载系统日志...');
+            
+            setTimeout(() => {
+                alert('系统日志加载完成！\n\n最近日志：\n2026-04-14 15:30:22 - 管理员登录系统\n2026-04-14 14:25:10 - 生成2026年3月工艺分析报表\n2026-04-14 13:10:45 - 计算锂离子电池碳排放\n2026-04-14 10:05:33 - 查看电池拆解机详情');
+            }, 1000);
+        }
+
+        // 清空日志
+        function clearLogs() {
+            if (confirm('确定要清空系统日志吗？')) {
+                // 模拟清空日志
+                alert('系统日志清空中，请稍候...');
+                
+                setTimeout(() => {
+                    alert('系统日志已清空！');
+                }, 1000);
+            }
+        }
+
+        // 检查更新
+        function checkUpdate() {
+            // 模拟检查更新
+            alert('正在检查系统更新...');
+            
+            setTimeout(() => {
+                alert('系统检查完成！\n当前版本：v2.0.0\n最新版本：v2.0.0\n系统已是最新版本，无需更新。');
+            }, 1500);
+        }
+
+        // 打开新闻详情
+        function openNewsDetail(newsId) {
+            // 新闻详情数据
+            const newsDetails = {
+                1: {
+                    title: '工信部发布《新能源汽车废旧动力电池回收利用管理暂行办法》',
+                    date: '2026-04-10',
+                    source: '工信部官网',
+                    content: '工信部近日发布《新能源汽车废旧动力电池回收利用管理暂行办法》，明确了回收责任、处理标准和监管要求，促进废旧动力电池的规范回收和利用。\n\n《办法》规定，新能源汽车生产企业是废旧动力电池回收的责任主体，应当建立回收体系，确保废旧动力电池得到规范处理。同时，《办法》还明确了回收企业的资质要求和处理标准，加强了对回收过程的监管。\n\n业内专家表示，《办法》的发布将有力推动废旧动力电池回收利用行业的健康发展，促进资源循环利用，减少环境污染。'
+                },
+                2: {
+                    title: '2026年全国废弃电池回收量预计突破40万吨',
+                    date: '2026-04-08',
+                    source: '中国电子节能技术协会',
+                    content: '据中国电子节能技术协会预测，2026年全国废弃电池回收量将突破40万吨，同比增长25%，行业发展前景广阔。\n\n随着新能源汽车保有量的快速增长，废旧动力电池的回收利用成为亟待解决的问题。协会数据显示，2025年全国废弃电池回收量达到32万吨，其中动力电池占比超过60%。\n\n协会负责人表示，未来几年，随着更多的新能源汽车进入报废期，废弃电池回收量将持续增长，行业发展潜力巨大。'
+                },
+                3: {
+                    title: '国内首条全自动化废旧电池回收生产线建成投产',
+                    date: '2026-04-05',
+                    source: '科技日报',
+                    content: '国内首条全自动化废旧电池回收生产线在江苏建成投产，年处理能力达5万吨，回收效率提高30%以上。\n\n该生产线采用先进的自动化技术，实现了废旧电池的自动拆解、分选和回收，大幅提高了回收效率和回收率。同时，该生产线还采用了环保处理技术，减少了回收过程中的环境污染。\n\n项目负责人表示，全自动化生产线的建成投产，标志着我国废旧电池回收技术达到了国际先进水平，将有力推动行业的技术进步。'
+                },
+                4: {
+                    title: '全球电池回收市场规模预计2030年达到2000亿美元',
+                    date: '2026-04-01',
+                    source: '全球环保研究网',
+                    content: '根据全球环保研究网发布的报告，全球电池回收市场规模预计2030年达到2000亿美元，年复合增长率超过20%。\n\n报告指出，随着全球新能源汽车和便携式电子设备的快速增长，废旧电池的产生量也在迅速增加，推动了电池回收市场的发展。同时，各国政府对环境保护的重视和相关政策的出台，也为电池回收市场的发展提供了有力支持。\n\n报告预测，未来几年，亚洲将成为全球电池回收市场的主要增长区域，中国、日本和韩国将在其中发挥重要作用。'
+                }
+            };
+            
+            const news = newsDetails[newsId];
+            if (news) {
+                // 创建新闻详情对话框
+                const modal = document.createElement('div');
+                modal.className = 'modal fade show';
+                modal.style.display = 'block';
+                modal.style.position = 'fixed';
+                modal.style.top = '0';
+                modal.style.left = '0';
+                modal.style.width = '100%';
+                modal.style.height = '100%';
+                modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                modal.style.zIndex = '1000';
+                
+                modal.innerHTML = `
+                    <div class="modal-dialog" style="margin: 5% auto; max-width: 800px; max-height: 90vh; overflow-y: auto;">
+                        <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                                <h5 class="modal-title">${news.title}</h5>
+                                <button type="button" class="btn-close" onclick="this.closest('.modal').remove()" style="color: white;"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="news-meta">
+                                    <span class="news-date">${news.date}</span>
+                                    <span class="news-source">来源：${news.source}</span>
+                                </div>
+                                <div class="news-content">
+                                    ${news.content.replace(/\n/g, '<br>')}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+            }
+        }
+
+        // 实时更新日期
+        function updateCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            
+            const dateString = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            document.getElementById('current-date').textContent = dateString;
+        }
+
+        // 页面加载完成后执行
+        window.onload = function() {
+            updateCurrentDate();
+            setInterval(updateCurrentDate, 1000);
+        };
+
+        // 保存系统配置
+        function saveSystemConfig() {
+            const language = document.querySelector('input[name="language"]:checked').id;
+            const theme = document.getElementById('theme').value;
+            
+            // 模拟保存过程
+            alert('系统配置保存中，请稍候...');
+            
+            setTimeout(() => {
+                // 应用主题
+                if (theme === 'dark') {
+                    document.body.style.backgroundColor = '#343a40';
+                    document.body.style.color = '#f8f9fa';
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.style.backgroundColor = '#495057';
+                        card.style.color = '#f8f9fa';
+                    });
+                    document.querySelectorAll('.top-nav').forEach(nav => {
+                        nav.style.backgroundColor = '#212529';
+                    });
+                } else {
+                    document.body.style.backgroundColor = '#f8f9fa';
+                    document.body.style.color = '#212529';
+                    document.querySelectorAll('.card').forEach(card => {
+                        card.style.backgroundColor = 'white';
+                        card.style.color = '#212529';
+                    });
+                    document.querySelectorAll('.top-nav').forEach(nav => {
+                        nav.style.backgroundColor = '#007bff';
+                    });
+                }
+                
+                // 应用语言
+                if (language === 'language-en') {
+                    alert('Language changed to English!\nThe system will restart to apply changes.');
+                } else {
+                    alert('语言已更改为中文！\n系统将重启以应用更改。');
+                }
+                
+                alert('系统配置保存成功！');
+            }, 1000);
+        }
+
+        // 辅助函数
+        function getReportTypeName(type) {
+            const types = {
+                process: '工艺分析报表',
+                carbon: '碳排放报表',
+                equipment: '设备运行报表',
+                production: '生产报表'
+            };
+            return types[type] || type;
+        }
+
+        function getReportPeriodName(period) {
+            const periods = {
+                daily: '日报',
+                weekly: '周报',
+                monthly: '月报',
+                quarterly: '季报',
+                yearly: '年报'
+            };
+            return periods[period] || period;
+        }
+
+        function getReportFormatName(format) {
+            const formats = {
+                pdf: 'PDF',
+                excel: 'Excel',
+                word: 'Word'
+            };
+            return formats[format] || format;
+        }
+
+        // 初始化图表
+        window.addEventListener('load', function() {
+            // 处理量趋势图表
+            const processingCtx = document.getElementById('processingChart');
+            if (processingCtx) {
+                new Chart(processingCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [
+                            {
+                                label: '处理电池数量',
+                                data: [850, 920, 1050, 1120, 1200, 1350],
+                                borderColor: '#007bff',
+                                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 回收材料分布图表
+            const materialCtx = document.getElementById('materialChart');
+            if (materialCtx) {
+                new Chart(materialCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['正极材料', '负极材料', '金属集流体', '塑料外壳', '其他'],
+                        datasets: [
+                            {
+                                data: [40, 25, 20, 10, 5],
+                                backgroundColor: [
+                                    '#007bff',
+                                    '#28a745',
+                                    '#ffc107',
+                                    '#dc3545',
+                                    '#6c757d'
+                                ]
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // 能耗分析图表
+            const energyCtx = document.getElementById('energyChart');
+            if (energyCtx) {
+                new Chart(energyCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['预处理', '湿法回收', '火法回收', '再生合成', '其他'],
+                        datasets: [
+                            {
+                                label: '能耗 (kWh/吨)',
+                                data: [120, 350, 500, 280, 50],
+                                backgroundColor: '#28a745'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 排放指标图表
+            const emissionCtx = document.getElementById('emissionChart');
+            if (emissionCtx) {
+                new Chart(emissionCtx, {
+                    type: 'radar',
+                    data: {
+                        labels: ['CO2', 'SO2', 'NOx', '颗粒物', '废水'],
+                        datasets: [
+                            {
+                                label: '实际排放',
+                                data: [30, 15, 20, 10, 5],
+                                backgroundColor: 'rgba(0, 123, 255, 0.2)',
+                                borderColor: '#007bff'
+                            },
+                            {
+                                label: '排放标准',
+                                data: [50, 30, 35, 25, 20],
+                                backgroundColor: 'rgba(220, 53, 69, 0.2)',
+                                borderColor: '#dc3545'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+
+            // 碳排放图表
+            const carbonEmissionCtx = document.getElementById('carbonEmissionChart');
+            if (carbonEmissionCtx) {
+                new Chart(carbonEmissionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['锂离子电池', '铅酸电池', '镍氢电池', '锌锰电池'],
+                        datasets: [
+                            {
+                                label: '直接碳排放',
+                                data: [0.5, 0.8, 0.6, 0.4],
+                                backgroundColor: '#dc3545'
+                            },
+                            {
+                                label: '间接碳排放',
+                                data: [0.8, 0.6, 0.7, 0.5],
+                                backgroundColor: '#007bff'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '碳排放 (kg CO₂e/kg)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 碳减排图表
+            const carbonReductionCtx = document.getElementById('carbonReductionChart');
+            if (carbonReductionCtx) {
+                new Chart(carbonReductionCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['锂离子电池', '铅酸电池', '镍氢电池', '锌锰电池'],
+                        datasets: [
+                            {
+                                label: '减排量',
+                                data: [4.0, 2.5, 3.0, 1.5],
+                                backgroundColor: '#28a745'
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: '减排量 (kg CO₂e/kg)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 生产数据图表
+            const productionCtx = document.getElementById('productionChart');
+            if (productionCtx) {
+                new Chart(productionCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                        datasets: [
+                            {
+                                label: '处理量 (吨)',
+                                data: [1200, 1350, 1500, 1650, 1800, 1950],
+                                borderColor: '#007bff',
+                                backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            },
+                            {
+                                label: '再生材料产量 (吨)',
+                                data: [800, 900, 1000, 1100, 1200, 1300],
+                                borderColor: '#28a745',
+                                backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                                tension: 0.4,
+                                fill: true
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
